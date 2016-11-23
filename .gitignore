@@ -1,0 +1,15 @@
+**/target/
+**/certs/
+**/rsa_keys/
+**/rsa_sample_keys/
+**/.idea/
+**/*.iml
+**/.settings/
+**/.classpath
+**/.project
+**/.vertx/
+**/node_modules/
+.classpath
+.project
+npm-debug.log
+**/.DS_Store

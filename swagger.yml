@@ -1,0 +1,149 @@
+swagger: '2.0'
+info:
+  title: Ethereum Auth0 API
+  description: ApT rocks!
+  version: "1.0.0"
+# the domain of the service
+paths:
+  /register/user:
+    post:
+      summary: Registers a new user from the web
+      tags: SYNCHRONOUS
+      parameters:
+        - name: the request
+          in: body
+          description: registration data
+          required: true
+          schema:
+            $ref: '#/definitions/UserRegistrationRequest'
+      responses:
+        '201':
+          description: Created OK
+        '403':
+          description: Challenge unsuccesful
+          schema:
+            $ref: '#/definitions/Error'
+  /register/mobile:
+    post:
+      summary: Registers a new secondary key from the mobile
+      tags: ASYNCHRONOUS
+      parameters:
+        - name: the request
+          in: body
+          description: registration data
+          required: true
+          schema:
+            $ref: '#/definitions/MobileRegistrationRequest'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: Challenge unsuccesful
+          schema:
+            $ref: '#/definitions/Error'
+  /signature:
+    post:
+      summary: Submits a signature of the cryptographic challege
+      tags: SYNCHRONOUS
+      parameters:
+        - name: the request
+          in: body
+          description: signature
+          required: true
+          schema:
+            $ref: '#/definitions/SignatureSubmissionRequest'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: Challenge unsuccesful
+          schema:
+            $ref: '#/definitions/Error'
+  /authenticate:
+    post:
+      summary: Authenticates the user from the web
+      tags: SYNCHRONOUS
+      parameters:
+        - name: the request
+          in: body
+          description: Login form data
+          required: true
+          schema:
+            $ref: '#/definitions/AuthenticationRequest'
+      responses:
+        '200':
+          description: OK
+        '403':
+          description: Challenge unsuccesful
+          schema:
+            $ref: '#/definitions/Error'
+  /initialize:
+    get:
+      summary: Initializes authentication server by deploying Ethereum's smart contract and creating DB's tables (if do not exist)
+      tags: SYNCHRONOUS
+      responses:
+        '200':
+          description: Smart contract's address, format 0x[Aa-fF0-9]{40}
+        '403':
+          description: Initialization unsuccesful
+          schema:
+            $ref: '#/definitions/Error'
+  /account/get:
+    get:
+      summary: Gets active user account's address
+      responses:
+        '200':
+          description: Smart contract's address, format 0x[Aa-fF0-9]{40}
+  /mapper/contract/abi:
+    get:
+      summary: Gets Mapper smart contract's ABI
+      responses:
+        '200':
+          description: Mapper smart contract's ABI
+  /publickey:
+    get:
+      summary: Gets Server's RSA public key
+      responses:
+        '200':
+          description: Server's RSA public key
+definitions:
+  MobileRegistrationRequest:
+    type: object
+    properties:
+      secondaryAddress:
+        type: string
+        description: Secondary address, format 0x[Aa-fF0-9]{40}
+      registrationToken:
+        type: string
+        description: Data used to identify the device for push notifications.
+  UserRegistrationRequest:
+    type: object
+    properties:
+      email:
+        type: string
+        description: User email.
+      primaryAddress:
+        type: string
+        description: Primary address, format 0x[Aa-fF0-9]{40}
+  AuthenticationRequest:
+    type: object
+    properties:
+      email:
+        type: string
+        description: Users email.
+  SignatureSubmissionRequest:
+    type: object
+    properties:
+      signature:
+        type: string
+        description: The signature of the cryptographic challenge
+      requestId:
+        type: string
+        description: The uuid received in the push notification challenge
+  Error:
+    type: object
+    properties:
+      requestId:
+        type: string
+      message:
+        type: string

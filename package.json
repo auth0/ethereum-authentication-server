@@ -1,0 +1,33 @@
+{
+  "name": "eth-authentication-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --timeout 100000"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "latest",
+    "chai": "latest",
+    "chai-http": "latest",
+    "cookie-parser": "^1.4.3",
+    "email-validator": "latest",
+    "eth-crypto": "file:ethereum-crypto",
+    "eth-db-service": "file:ethereum-user-db-service",
+    "eth-registration-service": "file:ethereum-registration-service",
+    "express": "^4.14.0",
+    "express-jwt": "^5.1.0",
+    "fcm-node": "latest",
+    "geoip2": "^1.0.5",
+    "jsonwebtoken": "^7.1.9",
+    "mongoose": "latest",
+    "node-uuid": "latest",
+    "proxyquire": "latest",
+    "public-ip": "^2.0.1",
+    "q": "latest",
+    "request-ip": "^1.2.2",
+    "winston": "latest"
+  }
+}
