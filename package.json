@@ -23,6 +23,7 @@
     "geoip2": "^1.0.5",
     "jsonwebtoken": "^7.1.9",
     "mongoose": "latest",
+    "node-rsa": "^0.4.2",
     "node-uuid": "latest",
     "proxyquire": "latest",
     "public-ip": "^2.0.1",
