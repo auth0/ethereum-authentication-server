@@ -28,7 +28,8 @@ const express = require('express'),
 	  router = express.Router();
 
 router.get('/', function(req, res, next) {
-    res.send(applicationConfigurationService.rsaKeys.publicKey);
+	res.header("Content-Type",'application/json');
+    res.send(JSON.stringify(applicationConfigurationService.rsaKeys.publicKey));
 });
 
 module.exports = router;
