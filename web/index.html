@@ -1,43 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <title>Ethereum Authentication server</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <link rel="stylesheet" href="css/angular-csp.css">
+	<title>Ethereum Authentication server</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/angular-csp.css">
 </head>
+
 <body>
 
-<div class="jumbotron text-center">
-  <h1>Ethereum Authentication server</h1>
-  <p>Information page </p>
-</div>
-  
-<div class="container" ng-app="InformationApp" ng-controller="informationCtrl" ng-cloak>
-  <div class="row">
-    <div>
-      <h3>Active user's account</h3>
-		<label for="address">Address:</label>
-		<input type="text" class="form-control" onClick="this.setSelectionRange(0, this.value.length)" value="{{accountAddress}}" rows="5" id="address" readonly>
-    </div>
-    <div>
-      <h3>Mapper's smart contract</h3>
-		<label for="address">Address:</label>
-		<input type="text" class="form-control" onClick="this.setSelectionRange(0, this.value.length)" value="{{smartContractAddress}}" rows="5" id="address" readonly>
-		<label for="abi">ABI:</label>
-		<textarea class="form-control" onClick="this.setSelectionRange(0, this.value.length)" rows="4" id="abi" readonly>{{contractAbi}}</textarea>
-    </div>
-	<div>
-		<button type="button" style="margin-top: 10px;" class="btn btn-info" ng-click="getInformation()">Initialize server / get information</button>
+	<div class="jumbotron text-center">
+		<h2>Ethereum Authentication server</h2>
+		<p>Information page </p>
 	</div>
-  </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
-<script type="text/javascript" src="js/informationApp.js"></script>
+
+	<div class="container main-container" ng-app="InformationApp" ng-controller="informationCtrl" ng-cloak>
+		<div class="row">
+			<div>
+				<h3 class="infoTitle">Active user's account</h3>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="address" class="col-sm-1 control-label ">ADDRESS:</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" onClick="this.setSelectionRange(0, this.value.length)" value="{{accountAddress}}" rows="5" id="address" readonly>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div>
+				<h3 class="infoTitle">Mapper's smart contract</h3>
+				<form class="form-horizontal">
+					<div class="form-group">
+						<label for="address" class="col-sm-1 control-label">ADDRESS:</label>
+						<div class="col-sm-11">
+							<input type="text" class="form-control" onClick="this.setSelectionRange(0, this.value.length)" value="{{smartContractAddress}}" rows="5" id="address" readonly>
+						</div>
+					</div>
+					<div class="form-group">
+						<label for="abi" class="col-sm-1 control-label">ABI:</label>
+						<div class="col-sm-11">
+							<textarea class="form-control" onClick="this.setSelectionRange(0, this.value.length)" rows="4" id="abi" readonly>{{contractAbi}}</textarea>
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="buttonAlign">
+				<button type="button" class="btn btn-info actionButton" ng-click="getInformation()">Initialize server</button>
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+	<script type="text/javascript" src="js/informationApp.js"></script>
 </body>
+
 </html>
-
-

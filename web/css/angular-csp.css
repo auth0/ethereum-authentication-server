@@ -1,3 +1,101 @@
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
 }
+
+@font-face {
+    font-family: 'avenir'; /*a name to be used later*/
+    src: url(./fonts/AvenirNextLTPro-Regular.otf); /*URL to font*/
+}
+
+body{
+	font-family: "avenir";
+	background-color: #eee;
+}
+
+.jumbotron {
+    padding-top: 30px;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    color: white;
+    background-color: rgb(54,69,110);
+}
+
+.main-container {
+	position: absolute;
+	width: 1000px;
+	padding: 20px 50px 40px;
+	
+	background: #fff;
+	top: 50%;
+	left: 50%;
+	margin-top: -200px;
+	margin-left: -500px;
+	z-index: 99;
+	border-radius: 6px;
+}
+.buttonAlign{
+	text-align: center;
+}
+.actionButton {
+	background-color: rgb(46, 54, 78);
+	border-color: rgb(46, 54, 78);
+	padding: 6px 35px;
+	border-radius: 100px;
+	padding: 6px 50px;
+	border-radius: 20px;
+	margin-top: 3%;
+	margin-bottom: 0%;
+	color: #fff;
+	text-transform: capitalize;
+	font-weight: 300;
+	outline: 0;
+}
+.actionButton:hover {
+	background-color: rgb(46, 54, 78);
+	border-color: rgb(46, 54, 78);
+	padding: 6px 35px;
+	border-radius: 100px;
+	padding: 6px 50px;
+	border-radius: 20px;
+	margin-top: 3%;
+	margin-bottom: 0%;
+	color: #fff;
+	text-transform: capitalize;
+	font-weight: 300;
+	outline: 0;
+}
+.actionButton:focus {
+	background-color: rgb(46, 54, 78) !important;
+	border-color: rgb(46, 54, 78);
+	padding: 6px 35px;
+	border-radius: 100px;
+	padding: 6px 50px;
+	border-radius: 20px;
+	margin-top: 3%;
+	margin-bottom: 0%;
+	color: #fff;
+	text-transform: capitalize;
+	font-weight: 300;
+	outline: 0 !important;
+}
+
+.infoTitle{
+	margin-bottom: 3%;
+}
+
+.col-sm-1{
+    padding-left: 38px;
+}
+.col-sm-11{
+    padding-left: 38px;
+}
+.form-horizontal .control-label {
+    padding-top: 7px;
+    margin-bottom: 0;
+    text-align: right;
+}
+
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control {
+    background-color: white;
+    opacity: 1;
+}
