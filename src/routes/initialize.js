@@ -30,6 +30,7 @@ const express = require('express'),
       dbService = require('../services/wrappers/dbServiceWrapper'),
       errorHandler = require('./errorHandler.js'),
       log = require('../util/log.js'),
+	  applicationConfiguration = require('../services/configuration/applicationConfigurationService.js'),
       router = express.Router();
 
 var smartContractAddress;
@@ -41,7 +42,7 @@ router.get('/', function(req, res, next) {
         var promiseTable = [];
         promiseTable.push(dbService.createMobileMappingTable());
         promiseTable.push(dbService.createUserCredentialsTable());
-        promiseTable.push(initializeService.deploy());
+        promiseTable.push(initializeService.deploy(applicationConfiguration.mapperContractAddress));
 
         return Q.all(promiseTable).spread(function(createMobileMappingTableStatus, createUserCredentialsTableStatus, address){
             log.info(requestId + ' Initialization succesful!');

@@ -35,6 +35,7 @@ module.exports = (function() {
 		dbHost : process.env.DB_HOST,
 		signatureTimeout : process.env.SIGNATURE_TIMEOUT ? process.env.SIGNATURE_TIMEOUT : 60000,
 		firebaseAPIKey : process.env.FIREBASE_API_KEY,
+		mapperContractAddress : process.env.MAPPER_CONTRACT_ADDRESS,
 		jwtExpirationTime : process.env.JWT_EXPIRATION_TIME ? process.env.JWT_EXPIRATION_TIME : '1d',//24h
 		httpsOptions: {
             key: fs.readFileSync('./config/certs/server.key'),
