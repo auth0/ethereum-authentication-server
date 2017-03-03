@@ -27,8 +27,8 @@ const ethRegistrationService = require('../wrappers/etheterumRegistryServiceWrap
 
 module.exports = (function () {
 	return {
-		deploy : function deploy() {
-			return ethRegistrationService.deploy();
+		deploy : function deploy(address) {
+			return ethRegistrationService.deploy(address);
 		}
 	}
 })();
