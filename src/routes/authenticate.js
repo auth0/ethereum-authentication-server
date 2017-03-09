@@ -48,9 +48,10 @@ router.post('/', function (req, res, next) {
 	    return authenticationService.authenticateUser(userAuthenticationRequest(req.headers.referer, req.body.email, requestId, details))
 	}).then(function onSuccess() {
 		log.info(requestId + ' Authentication was successful');
-		var singleJwtToken = jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
-		    applicationConfigurationService.rsaKeys.privateKey, { algorithm: 'RS256', expiresIn: applicationConfigurationService.jwtExpirationTime});
-		res.status(200).json(singleJwtToken);
+		jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
+		    applicationConfigurationService.rsaKeys.privateKey, { algorithm: 'RS256', expiresIn: applicationConfigurationService.jwtExpirationTime}, function(err, token) {
+		  res.status(200).json(token);
+		});
 	}).fail(function onFailure(error) {
 	    errorHandler.handleError(res,error,requestId,403);
 	});
