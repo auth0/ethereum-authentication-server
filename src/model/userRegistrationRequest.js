@@ -56,7 +56,8 @@ module.exports = function(website, email, primaryAddress, requestId, details) {
 				to : registrationToken,
 				notification : {
 					title : title,
-					body : body
+					body : body,
+					click_action:"FCM_PLUGIN_ACTIVITY"
 				},
 				data : {
 				    requestInfo : JSON.stringify(requestInfo)
