@@ -23,30 +23,25 @@
 */
 'use strict';
 
-const fs = require('fs'),
-	  NodeRSA = require('node-rsa');
+const dbService = require('../wrappers/dbServiceWrapper.js'),
+	  applicationConfiguration = require('../configuration/applicationConfigurationService.js'),
+	  mandrill = require('mandrill-api/mandrill'),
+	  mandrill_client = new mandrill.Mandrill(applicationConfiguration.mandrillKey),
+      log = require('../../util/log.js');
 
-var privateKey = fs.readFileSync('./config/rsa_keys/id_rsa','utf8');
-
-module.exports = (function() {
+module.exports = (function init() {
+	
+	var async = false;
+	var ip_pool = "Main Pool";
+	var send_at = null;
 	
 	return {
-		ethereumUrl : process.env.GETH_CONNECTION_URL,
-		dbHost : process.env.DB_HOST,
-		signatureTimeout : process.env.SIGNATURE_TIMEOUT ? process.env.SIGNATURE_TIMEOUT : 60000,
-		firebaseAPIKey : process.env.FIREBASE_API_KEY,
-		mapperContractAddress : process.env.MAPPER_CONTRACT_ADDRESS,
-		mandrillKey : process.env.MANDRILL_KEY,
-		mandrillFromEmail : process.env.MANDRILL_FROM_EMAIL,
-		jwtExpirationTime : process.env.JWT_EXPIRATION_TIME ? process.env.JWT_EXPIRATION_TIME : '1d',//24h
-		httpsOptions: {
-            key: fs.readFileSync('./config/certs/server.key'),
-            cert: fs.readFileSync('./config/certs/server.crt')
-        },
-        rsaKeys : {
-            //publicKey : fs.readFileSync('./config/rsa_keys/id_rsa.pub','utf8'),
-			publicKey : new NodeRSA(privateKey).exportKey('pkcs8-public-pem'),//generates public key from a private one
-            privateKey : privateKey
-        }
-	}
+		sendEmail : function sendEmail(message) {
+			mandrill_client.messages.send({"message": message.toEmail(), "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
+				console.log(result);
+			}, function(e) {
+				console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+			});
+		}
+	};
 })();

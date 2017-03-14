@@ -29,6 +29,7 @@
     "public-ip": "^2.0.1",
     "q": "latest",
     "request-ip": "^1.2.2",
-    "winston": "latest"
+    "winston": "latest",
+	"mandrill-api": "^1.0.45"
   }
 }

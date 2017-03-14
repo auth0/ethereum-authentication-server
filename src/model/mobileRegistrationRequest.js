@@ -23,7 +23,7 @@
 */
 'use strict';
 
-module.exports = function(registrationToken, secondaryAddress, requestId, details) {
+module.exports = function(registrationToken, secondaryAddress, requestId, details, email) {
 
 	const title = "Mobile device registration request",
 	body = "Accept if you wish to use this device for Ethereum authentication",
@@ -76,6 +76,9 @@ module.exports = function(registrationToken, secondaryAddress, requestId, detail
 		},
 		getRequestId : function getRequestId() {
 			return requestId;
+		},
+		getEmail : function getEmail() {
+			return email;
 		}
 	};
 }
