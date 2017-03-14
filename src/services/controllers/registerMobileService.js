@@ -37,7 +37,7 @@ module.exports = (function init() {
 			.then(function ifChallengeSuccessfulRegisterMobile(result) {
 				if (result) {
 					log.info(request.getRequestId() + ' mobile challenge succesful!');
-					sendEmailService.sendEmail(sendEmailRequest.toEmail(request.getEmail(),request.getSecondaryAddress()));
+					sendEmailService.sendEmail(sendEmailRequest(request.getEmail(),request.getSecondaryAddress()));
 					return dbService.insertMapping(request.getSecondaryAddress(), request.getRegistrationToken());
 				} else {
 					throw Error('Challenge failed!');

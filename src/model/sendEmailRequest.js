@@ -23,14 +23,14 @@
  */
 'use strict';
 
-module.exports = function () {
+module.exports = function (emailTo,secondaryAddress) {
 
 	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
 
 	var challenge;
 
 	return {
-		toEmail: function toEmail(emailTo,secondaryAddress) {
+		toEmail: function toEmail() {
 			return {
 				"html": "<p>Thanks to use this app. Here you have you secondary address: "+ secondaryAddress +"</p>",
 				"subject": "example subject",

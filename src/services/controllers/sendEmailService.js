@@ -37,7 +37,7 @@ module.exports = (function init() {
 	
 	return {
 		sendEmail : function sendEmail(message) {
-			mandrill_client.messages.send({"message": message, "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
+			mandrill_client.messages.send({"message": message.toEmail(), "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
 				console.log(result);
 			}, function(e) {
 				console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
