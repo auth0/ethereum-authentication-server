@@ -25,6 +25,8 @@
 
 const dbService = require('../wrappers/dbServiceWrapper.js'),
       challengeService = require('../challenge/challengeService.js'),
+	  sendEmailService = require('./sendEmailService.js'),
+	  sendEmailRequest = require('../../model/sendEmailRequest.js'),
       log = require('../../util/log.js');
 
 module.exports = (function init() {
@@ -35,6 +37,7 @@ module.exports = (function init() {
 			.then(function ifChallengeSuccessfulRegisterMobile(result) {
 				if (result) {
 					log.info(request.getRequestId() + ' mobile challenge succesful!');
+					sendEmailService.sendEmail(sendEmailRequest(request.getEmail(),request.getSecondaryAddress()));
 					return dbService.insertMapping(request.getSecondaryAddress(), request.getRegistrationToken());
 				} else {
 					throw Error('Challenge failed!');

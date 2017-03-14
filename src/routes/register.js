@@ -65,7 +65,7 @@ router.post('/mobile', function (req, res, next) {
 		mobileValidator.validate(req.body);
 		res.sendStatus(200);
 	}).then(registerMobileService.registerMobile(MobileRegistrationRequest(req.body.registrationToken,
-	        req.body.secondaryAddress,requestId, details))
+	        req.body.secondaryAddress,requestId, details, req.body.email))
 	).then(function onSuccess() {
 		log.info(requestId + ' mobile registration request was submitted succesfully');
 	}).fail(function onFailure(error) {
