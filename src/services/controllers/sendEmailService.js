@@ -26,7 +26,7 @@
 const dbService = require('../wrappers/dbServiceWrapper.js'),
 	  applicationConfiguration = require('../configuration/applicationConfigurationService.js'),
 	  mandrill = require('mandrill-api/mandrill'),
-	  mandrill_client = new mandrill.Mandrill(applicationConfiguration.mandrillKey);
+	  mandrill_client = new mandrill.Mandrill(applicationConfiguration.mandrillKey),
       log = require('../../util/log.js');
 
 module.exports = (function init() {
