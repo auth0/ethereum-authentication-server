@@ -25,7 +25,8 @@
 
 module.exports = function (emailTo, secondaryAddress) {
 
-	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
+	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js'),
+ fs = require('fs');
 
 	var emailTemplate;
 	fs.readFile('../resources/email_template.html', 'utf8', function (err, html) {
