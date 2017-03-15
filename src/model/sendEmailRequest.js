@@ -23,16 +23,19 @@
  */
 'use strict';
 
-module.exports = function (emailTo,secondaryAddress) {
+module.exports = function (emailTo, secondaryAddress) {
 
 	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
 
-	var challenge;
+	var emailTemplate;
+	fs.readFile('../resources/email_template.html', 'utf8', function (err, html) {
+		emailTemplate = html.replace(/secondaryAddress/g, secondaryAddress);
+	})
 
 	return {
 		toEmail: function toEmail() {
 			return {
-				"html": "<p>Thanks to use this app. Here you have you secondary address: "+ secondaryAddress +"</p>",
+				"html": emailTemplate,
 				"subject": "example subject",
 				"from_email": applicationConfigurationService.mandrillFromEmail,
 				"from_name": "Example Name",
