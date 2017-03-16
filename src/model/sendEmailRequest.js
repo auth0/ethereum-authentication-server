@@ -22,20 +22,22 @@
  * SOFTWARE. 
  */
 'use strict';
+const fs = require('fs'), applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
 
-module.exports = function (emailTo,secondaryAddress) {
+var htmlFile = fs.readFileSync('./src/resources/email_template.html', 'utf8')
 
-	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
+module.exports = function (emailTo, secondaryAddress) {
 
-	var challenge;
+	var emailTemplate;
+	emailTemplate = htmlFile.replace(/secondaryAddress/g, secondaryAddress);
 
 	return {
 		toEmail: function toEmail() {
 			return {
-				"html": "<p>Thanks to use this app. Here you have you secondary address: "+ secondaryAddress +"</p>",
-				"subject": "example subject",
+				"html": emailTemplate,
+				"subject": "Ethereum mobile key registration",
 				"from_email": applicationConfigurationService.mandrillFromEmail,
-				"from_name": "Example Name",
+				"from_name": applicationConfigurationService.mandrillFromEmail,
 				"to": [{
 					"email": emailTo,
 					"name": "Recipient Name",
