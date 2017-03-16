@@ -22,24 +22,22 @@
  * SOFTWARE. 
  */
 'use strict';
+const fs = require('fs'), applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js');
+
+var htmlFile = fs.readFileSync('./src/resources/email_template.html', 'utf8')
 
 module.exports = function (emailTo, secondaryAddress) {
 
-	const applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js'),
- fs = require('fs');
-
 	var emailTemplate;
-	fs.readFile('../resources/email_template.html', 'utf8', function (err, html) {
-		emailTemplate = html.replace(/secondaryAddress/g, secondaryAddress);
-	})
+	emailTemplate = htmlFile.replace(/secondaryAddress/g, secondaryAddress);
 
 	return {
 		toEmail: function toEmail() {
 			return {
 				"html": emailTemplate,
-				"subject": "example subject",
+				"subject": "Ethereum mobile key registration",
 				"from_email": applicationConfigurationService.mandrillFromEmail,
-				"from_name": "Example Name",
+				"from_name": applicationConfigurationService.mandrillFromEmail,
 				"to": [{
 					"email": emailTo,
 					"name": "Recipient Name",
