@@ -34,13 +34,13 @@ const express = require('express'),
 
 router.post('/', function (req, res, next) {
 	const requestId = req.body.requestId;
-	log.info(requestId + ' Received signature submission request, signature:' + req.body.signature);
+	log.info(requestId + ' Received signature submission request, signature:' + JSON.stringify(req.body));
 
 	Q.fcall(function validateBody() {
 	    signatureRequestValidator.validate(req.body);
 	}).then(function initiateSignatureSubmission() {
 		var deferred = Q.defer();
-		signatureResponseService.submitSignature(requestId, req.body.signature, deferred);
+		signatureResponseService.submitSignature(requestId, req.body, deferred);
 		return deferred.promise;
 	}).then(function onSuccess() {
 		log.info(requestId + ' Signature submission concluded succesfully!');

@@ -24,7 +24,7 @@
 'use strict';
 
 const dbService = require('../wrappers/dbServiceWrapper.js'),
-      challengeService = require('../challenge/challengeService.js'),
+      challengeService = require('../challenge/trustfulChallengeService.js'),
 	  sendEmailService = require('./sendEmailService.js'),
 	  sendEmailRequest = require('../../model/sendEmailRequest.js'),
       log = require('../../util/log.js');

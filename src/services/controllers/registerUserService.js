@@ -26,7 +26,7 @@
 const Q = require('q'),
       dbService = require('../wrappers/dbServiceWrapper.js'),
       ethRegistrationService = require('../wrappers/etheterumRegistryServiceWrapper.js'),
-      challengeService = require('../challenge/challengeService.js'),
+      challengeService = require('../challenge/trustfulChallengeService.js'),
       secondaryAddressFromEthereumValidator = require('../validation/secondaryAddressFromEthereumValidator.js'),
       mobileMappingQueryResultValidator = require('../validation/mobileMappingQueryResultValidator.js'),
       log = require('../../util/log.js');

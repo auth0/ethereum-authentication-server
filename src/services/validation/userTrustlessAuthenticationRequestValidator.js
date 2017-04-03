@@ -23,12 +23,20 @@
 */
 'use strict';
 
-const ethRegistrationService = require('../wrappers/etheterumRegistryServiceWrapper.js');
+const emailValidator = require('./emailValidator.js'),
+      addressValidator = require('./addressValidator.js');
 
-module.exports = (function () {
+module.exports = (function initialize() {
+
 	return {
-		deploy : function deploy(address) {
-			return ethRegistrationService.deploy(address);
+		validate : function validate(body) {
+			if (!body.email) {
+				throw new Error('email field is missing!');
+			}
+            if (!body.challenge) {
+                throw new Error('challange field is missing!');
+            }
+			emailValidator.validate(body.email);
 		}
-	}
+	};
 })();

@@ -27,6 +27,7 @@ const requestId = "bf1ce828-968f-11e6-ae22-56b6b6499611".toLowerCase(),
       primaryAddress = "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe".toLowerCase(),
       contractAddress = "0x5eD8Cee6b63b1c6AFce3AD7c92f4fD7E1B8fAd9F".toLowerCase(),
       secondaryAddress = "0xDa4a4626d3E16e094De3225A751aAb7128e96526".toLowerCase(),
+      challenge = "customchallenge",
       email = "someone@gmail.com",
       registrationToken = "bliblibli",
       signature = "blablebla",
@@ -75,6 +76,15 @@ var stubs = {
 
 var server = proxyquire('../index.js',stubs);
 
+function sendTrustlessAuthenticationRequest() {
+    return chai.request(server)
+        .post('/authenticate/trustless')
+        .send({
+            challenge : challenge,
+            email : email
+        })
+}
+
 function sendAuthenticationRequest() {
     return chai.request(server)
     .post('/authenticate')
@@ -115,6 +125,21 @@ function sendSignature(done) {
     });
 }
 
+function sendTrustlessSignature(done) {
+    chai.request(server)
+        .post('/signature')
+        .send({
+            requestId : requestId,
+            signature : signature,
+            challengeSignature : signature
+        }).end(function(err,res) {
+        res.should.have.status(200);
+        if(done) {
+            done();
+        }
+    });
+}
+
 function sendSignatureRejection() {
     chai.request(server)
     .post('/signature/reject')
@@ -144,6 +169,24 @@ describe('/signature',function test() {
 			sendSignature();
 		},2000);
 	});
+
+    it('should properly relay trustless signature request and return a authentication response',function(done) {
+        validator.validate = function validate(message) {
+            console.log("Validating push notification...");
+            //PUSH NOTIFICATION TEST
+            //TODO validate push notification
+        };
+        sendTrustlessAuthenticationRequest()
+            .end(function(err,res) {
+                res.body.should.have.property('signature');
+                res.body.signature.should.equal(signature);
+                res.should.have.status(200);
+                done();
+            });
+        setTimeout(function submitSignature() {
+            sendTrustlessSignature();
+        },2000);
+    });
 	
 	it('should properly relay signature request and return a mobile registration response',function(done) {
 		validator.validate = function validate(message) {
