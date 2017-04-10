@@ -40,7 +40,7 @@ const express = require('express'),
 
 const router = express.Router();
 
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     const requestId = uuid.v4();
     const details = clientsDetailsService.getDetailsFromClient(req.clientIp, req.headers['user-agent']);
     log.info(requestId + ' Received user authentication request:' + JSON.stringify(req.body));
@@ -64,7 +64,7 @@ router.post('/', function (req, res, next) {
     });
 });
 
-router.post('/trustless', function (req, res, next) {
+router.post('/trustless', function (req, res) {
     const requestId = uuid.v4();
     const details = clientsDetailsService.getDetailsFromClient(req.clientIp, req.headers['user-agent']);
     log.info(requestId + ' Received trustless user authentication request:' + JSON.stringify(req.body));
@@ -76,6 +76,8 @@ router.post('/trustless', function (req, res, next) {
     }).then(function onSuccess(result) {
         log.info(requestId + ' Authentication was successful, challenge signature: ' + result.challengeSignature);
         res.status(200).json({
+            primaryAddress : result.primaryAddress,
+            secondaryAddress : result.secondaryAddress,
             signature : result.challengeSignature
         });
     }).fail(function onFailure(error) {

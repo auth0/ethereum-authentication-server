@@ -26,7 +26,6 @@
 const dbService = require('../wrappers/dbServiceWrapper.js'),
     ethRegistrationService = require('../wrappers/etheterumRegistryServiceWrapper.js'),
     addressValidator = require('../validation/addressValidator.js'),
-    mobileMappingQueryResultValidator = require('../validation/mobileMappingQueryResultValidator.js'),
     userCredentialsQueryResultValidator = require('../validation/userCredentialsQueryResultValidator.js'),
     log = require('../../util/log.js');
 
@@ -41,22 +40,14 @@ module.exports = (function init() {
                             return dataFromDb[0];
                         }).then(function retrieveSecondaryKey(row) {
                             log.info(request.getRequestId() + " retrieved user credentials:" + JSON.stringify(row));
-                            var primaryAddress = row.primaryAddress;
-                            request.setPrimaryAddress(primaryAddress);
-                            return ethRegistrationService.getAuthenticationKey(primaryAddress);
+                            request.setRegistrationToken(row.registrationToken);
+                            request.setPrimaryAddress(row.primaryAddress);
+                            return ethRegistrationService.getAuthenticationKey(row.primaryAddress);
                         }).then(function retrieveMobileData(secondaryAddress) {
                             log.info(request.getRequestId() + ' retrieved  secondary address:' + secondaryAddress);
                             addressValidator.validate(secondaryAddress);
                             request.setSecondaryAddress(secondaryAddress);
-                        }).then(function retrieveMobileMapping() {
-                            return dbService.getMappingByAddress(request.getSecondaryAddress());
-                        }).then(function verifyDbData(dataFromDb) {
-                            mobileMappingQueryResultValidator.validate(dataFromDb);
-                            return dataFromDb[0];
-                        }).then(function returnResults(row) {
-                            log.info(request.getRequestId() + ' retrieved mobileMapping :' + JSON.stringify(row));
-                            request.setRegistrationToken(row.registrationToken);
-                        }).then(function initiateChallange() {
+                        }).then(function initiateChallenge() {
                             return challengeService.challengeMobile(request);
                         }).then(function checkResult(result) {
                             if (result.signingProcessSuccessful) {

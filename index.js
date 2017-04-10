@@ -33,8 +33,6 @@ const express = require('express'),
       authenticateRoute = require('./src/routes/authenticate.js'),
       initializeRoute = require('./src/routes/initialize.js'),
       signatureRoute = require('./src/routes/signature.js'),
-      account = require('./src/routes/account.js'),
-      contractAbi = require('./src/routes/mapper.js'),
       publicKey = require('./src/routes/publicKey.js'),
       app = express();
 
@@ -50,8 +48,6 @@ app.use('/register', registerRoute);
 app.use('/authenticate', authenticateRoute);
 app.use('/initialize', initializeRoute);
 app.use('/signature', signatureRoute);
-app.use('/account', account);
-app.use('/mapper', contractAbi);
 app.use('/publickey', publicKey);
 app.use('/information', express.static(__dirname + '/web'));
 

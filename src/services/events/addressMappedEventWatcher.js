@@ -23,26 +23,28 @@
  */
 'use strict';
 
-const dbService = require('../wrappers/dbServiceWrapper.js'),
-    challengeService = require('../challenge/trustfulChallengeService.js'),
-    sendEmailService = require('./sendEmailService.js'),
-    SendEmailRequest = require('../../model/sendEmailRequest.js'),
+const Q = require('q'),
+    dbService = require('../wrappers/dbServiceWrapper.js'),
+    RegistrationNotification = require('../../model/registrationFinishedNotification.js'),
+    mobilePushNotificationService = require('../challenge/mobilePushNotificationService.js'),
     log = require('../../util/log.js');
 
 module.exports = (function init() {
 
     return {
-        registerMobile: function registerMobile(request) {
-            return challengeService.challengeMobile(request)
-            .then(function ifChallengeSuccessfulRegisterMobile(result) {
-                if (result) {
-                    log.info(request.getRequestId() + ' mobile challenge succesful!');
-                    return sendEmailService.sendEmail(SendEmailRequest(request.getEmail(), request.getSecondaryAddress()));
-                } else {
-                    throw Error('Challenge failed!');
+        reactToEvent: function reactToEvent(primary, secondary) {
+            dbService.getUserCredentialsSecondaryAddress(secondary)
+            .then(function checkDbResult(result) {
+                if (result.length == 0) {
+                    throw new Error("Received AddressMapped event for non-existent user! " + primary + " " + secondary);
                 }
-            }).then(function () {
-                return dbService.insertUserCredential(request.getEmail(), request.getSecondaryAddress(), request.getRegistrationToken());
+                return Q.all([Q.fcall(function () {return result}),dbService.insertPrimaryAddress(result[0].email, primary)])
+            }).spread(function sendPushNotificationToMobile(userInfo) {
+                var notification = RegistrationNotification(userInfo.email, userInfo.primaryAddress,
+                    userInfo.secondaryAddress, userInfo.registrationToken)
+                mobilePushNotificationService.sendPushNotification(notification);
+            }).fail(function onFailure(error) {
+                log.error(error);
             });
         }
     };

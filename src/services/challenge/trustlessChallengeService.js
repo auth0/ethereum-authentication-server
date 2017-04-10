@@ -74,6 +74,8 @@ module.exports = (function init() {
                         promiseMap.rejectPromise('M' + request.getRequestId(), new Error("Invalid signature!"));
                     }
                     return {
+                        secondaryAddress : request.getSecondaryAddress(),
+                        primaryAddress : request.getPrimaryAddress(),
                         signingProcessSuccessful : signingProcessSuccessful,
                         challengeSignature : challengeSignature
                     };

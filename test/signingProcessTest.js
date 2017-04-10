@@ -43,8 +43,7 @@ var ethCryptoMock = EthCryptoMock(undefined,signature,true);
 var ethRegistrationServiceMock = EthRegistrationServiceMock(undefined,secondaryAddress,contractAddress);
 var dbServiceMock = DBServiceMock([{
 	secondaryAddress : secondaryAddress,
-	registrationToken : registrationToken
-}],[{
+	registrationToken : registrationToken,
 	email : email,
 	primaryAddress : primaryAddress
 }]);
@@ -78,11 +77,11 @@ var server = proxyquire('../index.js',stubs);
 
 function sendTrustlessAuthenticationRequest() {
     return chai.request(server)
-        .post('/authenticate/trustless')
-        .send({
-            challenge : challenge,
-            email : email
-        })
+    .post('/authenticate/trustless')
+    .send({
+        challenge : challenge,
+        email : email
+    })
 }
 
 function sendAuthenticationRequest() {
@@ -100,15 +99,6 @@ function sendMobileRegistrationRequest() {
         secondaryAddress : secondaryAddress,
         registrationToken : registrationToken
     })
-}
-
-function sendUserRegistrationRequest() {
-    return chai.request(server)
-    .post('/register/user')
-    .send({
-        primaryAddress : primaryAddress,
-        email : email
-    });
 }
 
 function sendSignature(done) {
@@ -145,7 +135,6 @@ function sendSignatureRejection() {
     .post('/signature/reject')
     .send({
         requestId : requestId,
-        signature : signature
     }).end(function(err,res) {
         res.should.have.status(200);
     });
@@ -153,6 +142,7 @@ function sendSignatureRejection() {
 
 
 describe('/signature',function test() {
+
 	it('should properly relay signature request and return a authentication response',function(done) {
 		validator.validate = function validate(message) {
 		    console.log("Validating push notification...");
@@ -179,7 +169,11 @@ describe('/signature',function test() {
         sendTrustlessAuthenticationRequest()
             .end(function(err,res) {
                 res.body.should.have.property('signature');
+                res.body.should.have.property('secondaryAddress');
+                res.body.should.have.property('primaryAddress');
                 res.body.signature.should.equal(signature);
+                res.body.primaryAddress.should.equal(primaryAddress);
+                res.body.secondaryAddress.should.equal(secondaryAddress);
                 res.should.have.status(200);
                 done();
             });
@@ -201,22 +195,6 @@ describe('/signature',function test() {
 			sendSignature(done);
 		},2000);
 	});
-	
-	it('should properly relay signature request and return a user registration response',function(done) {
-		validator.validate = function validate(message) {
-			//PUSH NOTIFICATION TEST
-			console.log("Validating push notification...");
-			//TODO validate push notification
-		};
-		sendUserRegistrationRequest()
-		.end(function(err,res) {
-            res.should.have.status(201);
-            done();
-        });
-		setTimeout(function submitSignature() {
-			sendSignature();
-		},2000);
-	});
 
 	it('should properly relay signature rejection request and return a authentication response',function(done) {
         validator.validate = function validate(message) {
@@ -234,20 +212,5 @@ describe('/signature',function test() {
         },2000);
     });
 
-    it('should properly relay signature rejection request and return a user registration response',function(done) {
-        validator.validate = function validate(message) {
-            //PUSH NOTIFICATION TEST
-            console.log("Validating push notification...");
-            //TODO validate push notification
-        };
-        sendUserRegistrationRequest()
-        .end(function(err,res) {
-            res.should.have.status(403);
-            done();
-        });
-        setTimeout(function submitSignature() {
-            sendSignatureRejection();
-        },2000);
-    });
 });
  
