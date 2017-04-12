@@ -7,7 +7,6 @@ RUN npm install
 ENV 1 2
 ADD src src
 ADD config config 
-ADD web web
 ADD test test
 ADD index.js index.js
 ADD start.sh start.sh
