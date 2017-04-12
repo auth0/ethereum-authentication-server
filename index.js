@@ -49,7 +49,6 @@ app.use('/authenticate', authenticateRoute);
 app.use('/initialize', initializeRoute);
 app.use('/signature', signatureRoute);
 app.use('/publickey', publicKey);
-app.use('/information', express.static(__dirname + '/web'));
 
 https.createServer(applicationConfiguration.httpsOptions, app).listen(3000, function () {
     console.log('[HTTPS] Listening on port 3000...');
