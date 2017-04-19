@@ -23,25 +23,30 @@
  */
 'use strict';
 
-const Q = require('q');
+module.exports = function (email, primaryAddress, secondaryAddress, registrationToken) {
 
-module.exports = function createMock(credentials) {
+    const title = "Ethereum account registration was succesful",
+        body = "You can now use your email to link your Ethereum account with Auth0",
+        type = 5;
 
-    function DbService() {
-    }
-
-    DbService['@global'] = true;
-
-    DbService.prototype.insertUserCredential = function insertUserCredential() {
-        return Q.fcall(function () {
-        });
-    }
-
-    DbService.prototype.getUserCredentialsByEmail = function getUserCredentialsByEmail(email) {
-        return Q.fcall(function () {
-            return credentials;
-        });
-    }
-
-    return DbService;
+    return {
+        toPushNotification: function toPushNotification() {
+            var requestInfo = {
+                type: type,
+                secondaryAddress: secondaryAddress,
+                primaryAddress: primaryAddress,
+            }
+            return {
+                to: registrationToken,
+                notification: {
+                    title: title,
+                    body: body,
+                    click_action: "FCM_PLUGIN_ACTIVITY"
+                },
+                data: {
+                    requestInfo: JSON.stringify(requestInfo)
+                }
+            };
+        }
+    };
 }

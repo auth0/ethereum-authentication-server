@@ -26,4 +26,4 @@
 const ETHRegistrationService = require('eth-registration-service'),
       applicationConfiguration = require('../configuration/applicationConfigurationService.js');
 
-module.exports = new ETHRegistrationService(applicationConfiguration.ethereumUrl);
+module.exports = new ETHRegistrationService(applicationConfiguration.ethereumUrl, applicationConfiguration.mapperContractAddress);

@@ -23,21 +23,20 @@
 */
 'use strict';
 
-const express = require('express'),
-	  uuid = require('node-uuid'),
-	  ethRegistrationService = require('../services/wrappers/etheterumRegistryServiceWrapper.js'),
-	  log = require('../util/log.js'),
-	  router = express.Router();
+const emailValidator = require('./emailValidator.js'),
+      addressValidator = require('./addressValidator.js');
 
-var accountAddress;
+module.exports = (function initialize() {
 
-router.get('/get', function(req, res, next) {
-    if(!accountAddress){
-        const requestId = uuid.v4();
-        accountAddress = ethRegistrationService.getAccount();
-        log.info(requestId + ' Received ethereum account address:' + accountAddress);
-    }
-    res.send(accountAddress);
-});
-
-module.exports = router;
+	return {
+		validate : function validate(body) {
+			if (!body.email) {
+				throw new Error('email field is missing!');
+			}
+            if (!body.challenge) {
+                throw new Error('challange field is missing!');
+            }
+			emailValidator.validate(body.email);
+		}
+	};
+})();

@@ -28,9 +28,9 @@ const signaturePromiseMap = require('../maps/promiseMap.js');
 module.exports = (function init() {
 
 	return {
-		submitSignature : function submitSignature(requestId, signature, mobileResponsePromise) {
+		submitSignature : function submitSignature(requestId, signatureBody, mobileResponsePromise) {
 			signaturePromiseMap.registerPromise('M' + requestId, mobileResponsePromise, 10000);
-			signaturePromiseMap.resolvePromise('C' + requestId, signature);
+			signaturePromiseMap.resolvePromise('C' + requestId, signatureBody);
 		}
 	}
 })();

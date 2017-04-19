@@ -34,9 +34,9 @@ module.exports = (function init() {
 		sendPushNotification : function sendPushNotification(request) {
 			fcm.send(request.toPushNotification(), function (err, response) {
 				if (err) {
-					log.error(request.requestId + " Could not send the push notification " + err.toString());
+					log.error(request.getRequestId() + " Could not send the push notification " + err.toString());
 				} else {
-					log.info(request.requestId + " Successfully sent push notification with response: ", response);
+					log.info(request.getRequestId() + " Successfully sent push notification with response: ", response);
 				}
 			});
 		}

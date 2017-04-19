@@ -23,7 +23,7 @@
 */
 'use strict';
 
-const dbService = require('../wrappers/dbServiceWrapper.js'),
+const Q = require('q'),
 	  applicationConfiguration = require('../configuration/applicationConfigurationService.js'),
 	  mandrill = require('mandrill-api/mandrill'),
 	  mandrill_client = new mandrill.Mandrill(applicationConfiguration.mandrillKey),
@@ -37,11 +37,13 @@ module.exports = (function init() {
 	
 	return {
 		sendEmail : function sendEmail(message) {
-			mandrill_client.messages.send({"message": message.toEmail(), "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
-				console.log(result);
-			}, function(e) {
-				console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
-			});
+			return Q.fcall(function () {
+                mandrill_client.messages.send({"message": message.toEmail(), "async": async, "ip_pool": ip_pool, "send_at": send_at}, function(result) {
+                    console.log(result);
+                }, function(e) {
+                    console.log('A mandrill error occurred: ' + e.name + ' - ' + e.message);
+                });
+            })
 		}
 	};
 })();

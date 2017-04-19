@@ -24,34 +24,35 @@
 'use strict';
 
 const express = require('express'),
-      Q = require('q'),
-      uuid = require('node-uuid'),
-      jwt = require('jsonwebtoken'),
-      authenticationService = require('../services/controllers/authenticationService.js'),
-      applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js'),
-      userAuthenticationRequest = require('../model/userAuthenticationRequest.js'),
-      clientsDetailsService = require('../services/challenge/clientsDetailsService.js'),
-      userAuthenticationRequestValidator = require('../services/validation/userAuthenticationRequestValidator.js'),
-      errorHandler = require('./errorHandler.js'),
-      log = require('../util/log.js');
+    Q = require('q'),
+    uuid = require('node-uuid'),
+    jwt = require('jsonwebtoken'),
+    trustlessAuthenticationService = require('../services/controllers/trustlessAuthenticationService.js'),
+    trustfulAuthenticationService = require('../services/controllers/trustfulAuthenticationService.js'),
+    applicationConfigurationService = require('../services/configuration/applicationConfigurationService.js'),
+    TrustfulUserAuthenticationRequest = require('../model/trustfulUserAuthenticationRequest.js'),
+    TrustlessUserAuthenticationRequest = require('../model/trustlessUserAuthenticationRequest.js'),
+    clientsDetailsService = require('../services/challenge/clientsDetailsService.js'),
+    userTrustfulAuthenticationRequestValidator = require('../services/validation/userTrustfulAuthenticationRequestValidator.js'),
+    userTrustlessAuthenticationRequestValidator = require('../services/validation/userTrustlessAuthenticationRequestValidator.js'),
+    errorHandler = require('./errorHandler.js'),
+    log = require('../util/log.js');
 
 const router = express.Router();
 
-router.post('/', function (req, res, next) {
-	const requestId = uuid.v4();
+router.post('/', function (req, res) {
+    const requestId = uuid.v4();
     const details = clientsDetailsService.getDetailsFromClient(req.clientIp, req.headers['user-agent']);
-	log.info(requestId + ' Received user authentication request:' + JSON.stringify(req.body));
-
-	Q.fcall(function validateBody() {
-        return userAuthenticationRequestValidator.validate(req.body);
+    log.info(requestId + ' Received user authentication request:' + JSON.stringify(req.body));
+    Q.fcall(function validateBody() {
+        return userTrustfulAuthenticationRequestValidator.validate(req.body);
     }).then(function initiateAuthentication() {
 	    return authenticationService.authenticateUser(userAuthenticationRequest(req.headers.referer, req.body.email, requestId, details))
 	}).then(function onSuccess() {
 		log.info(requestId + ' Authentication was successful');
-		jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
-		    applicationConfigurationService.rsaKeys.privateKey, { algorithm: 'RS256', expiresIn: applicationConfigurationService.jwtExpirationTime}, function(err, token) {
-		  res.status(200).json(token);
-		});
+		var singleJwtToken = jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
+		    applicationConfigurationService.rsaKeys.privateKey, { algorithm: 'RS256', expiresIn: applicationConfigurationService.jwtExpirationTime});
+		res.status(200).json(singleJwtToken);
 	}).fail(function onFailure(error) {
 	    errorHandler.handleError(res,error,requestId,403);
 	});

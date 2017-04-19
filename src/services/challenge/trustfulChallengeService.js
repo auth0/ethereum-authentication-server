@@ -34,7 +34,7 @@ const Q = require('q'),
       ethCrypto = new EthCrypto();
 
 module.exports = (function init() {
-	
+
 	return {
 		challengeMobile : function challengeMobile (request) {
 			return randomChallengeService.generateRandomString()
@@ -47,7 +47,8 @@ module.exports = (function init() {
 				promiseMap.registerPromise('C' + request.getRequestId(), deferred, applicationConfiguration.signatureTimeout);
 				mobilePushNotificationService.sendPushNotification(request);
 				return deferred.promise;
-			}).then(function verifySignature(signature) {
+			}).then(function verifySignature(signatureResponse) {
+				var signature = signatureResponse.signature;
 				log.info(request.getRequestId() + " verifying signature " + signature);
 				var challengeString = requestIdChallengeMap.getChallengeString(request.getRequestId());
 				log.info("The following information should be signed:"+challengeString);
@@ -60,7 +61,9 @@ module.exports = (function init() {
 				} else {
 					promiseMap.rejectPromise('M' + request.getRequestId(), new Error("Invalid signature!"));
 				}
-				return result;
+				return {
+                    signingProcessSuccessful : result
+                };
 			});
 		}
 	};

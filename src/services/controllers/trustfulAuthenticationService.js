@@ -23,25 +23,9 @@
  */
 'use strict';
 
-const Q = require('q');
+const trustfulChallengeService = require('../challenge/trustfulChallengeService.js'),
+    authenticationService = require('./authenticationService.js');
 
-module.exports = function createMock(credentials) {
-
-    function DbService() {
-    }
-
-    DbService['@global'] = true;
-
-    DbService.prototype.insertUserCredential = function insertUserCredential() {
-        return Q.fcall(function () {
-        });
-    }
-
-    DbService.prototype.getUserCredentialsByEmail = function getUserCredentialsByEmail(email) {
-        return Q.fcall(function () {
-            return credentials;
-        });
-    }
-
-    return DbService;
-}
+module.exports = (function init() {
+    return authenticationService.createService(trustfulChallengeService);
+})();

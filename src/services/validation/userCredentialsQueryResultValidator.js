@@ -32,6 +32,9 @@ module.exports = (function initialize() {
             if(!queryResultValidator.validate(dataFromDb)) {
                 throw new Error("User is not registered!");
             }
+            if(!dataFromDb[0].primaryAddress) {
+                throw new Error("Secondary/Primary address is not registered in the Mapper contract!");
+			}
 		}
 	};
 })();
