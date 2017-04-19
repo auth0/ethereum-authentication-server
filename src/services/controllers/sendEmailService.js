@@ -23,7 +23,7 @@
 */
 'use strict';
 
-const dbService = require('../wrappers/dbServiceWrapper.js'),
+const Q = require('q'),
 	  applicationConfiguration = require('../configuration/applicationConfigurationService.js'),
 	  mandrill = require('mandrill-api/mandrill'),
 	  mandrill_client = new mandrill.Mandrill(applicationConfiguration.mandrillKey),

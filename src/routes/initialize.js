@@ -44,9 +44,6 @@ router.get('/', function (req, res) {
         ethRegistrationService.registerEventListener(eventWatcher.reactToEvent);
         return dbService.createUserCredentialsTable()
             .then(function () {
-                dbService.insertUserCredential("someone@gmail.com","0x1c27d0daa7c2bdb644de7a0880354a5c6389e6ba","428472842384298ryw97fhsgfw79r293gr297fg2973fg798fgw7rgf")
-            })
-            .then(function () {
                 log.info(requestId + ' Initialization successful!');
                 res.send(applicationConfiguration.mapperContractAddress);
             }).fail(function onFailure(error) {

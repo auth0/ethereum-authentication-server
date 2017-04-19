@@ -36,12 +36,14 @@ module.exports = (function init() {
             dbService.getUserCredentialsSecondaryAddress(secondary)
             .then(function checkDbResult(result) {
                 if (result.length == 0) {
-                    throw new Error("Received AddressMapped event for non-existent user! " + primary + " " + secondary);
+                    throw new Error("Received AddressMapped event for non-existent user! " + primary + " " + secondary + " " + JSON.stringify(result));
                 }
-                return Q.all([Q.fcall(function () {return result}),dbService.insertPrimaryAddress(result[0].email, primary)])
+                result[0].primaryAddress = primary;
+                return Q.all([Q.fcall(function () {return result[0]}),dbService.insertPrimaryAddress(result[0].email, primary)])
             }).spread(function sendPushNotificationToMobile(userInfo) {
                 var notification = RegistrationNotification(userInfo.email, userInfo.primaryAddress,
                     userInfo.secondaryAddress, userInfo.registrationToken)
+                log.info("Sending registration succesful push notification:" + JSON.stringify(notification.toPushNotification()))
                 mobilePushNotificationService.sendPushNotification(notification);
             }).fail(function onFailure(error) {
                 log.error(error);
