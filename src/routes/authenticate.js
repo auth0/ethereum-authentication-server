@@ -47,15 +47,43 @@ router.post('/', function (req, res) {
     Q.fcall(function validateBody() {
         return userTrustfulAuthenticationRequestValidator.validate(req.body);
     }).then(function initiateAuthentication() {
-	    return authenticationService.authenticateUser(userAuthenticationRequest(req.headers.referer, req.body.email, requestId, details))
-	}).then(function onSuccess() {
-		log.info(requestId + ' Authentication was successful');
-		var singleJwtToken = jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
-		    applicationConfigurationService.rsaKeys.privateKey, { algorithm: 'RS256', expiresIn: applicationConfigurationService.jwtExpirationTime});
-		res.status(200).json(singleJwtToken);
-	}).fail(function onFailure(error) {
-	    errorHandler.handleError(res,error,requestId,403);
-	});
+        return trustfulAuthenticationService.authenticateUser(TrustfulUserAuthenticationRequest(req.headers.referer,
+            req.body.email, requestId, details))
+    }).then(function onSuccess() {
+        log.info(requestId + ' Authentication was successful');
+        jwt.sign({email: req.body.email, primaryAddress: req.body.primaryAddress},
+            applicationConfigurationService.rsaKeys.privateKey, {
+                algorithm: 'RS256',
+                expiresIn: applicationConfigurationService.jwtExpirationTime
+            }, function (err, token) {
+                res.status(200).json(token);
+            });
+
+    }).fail(function onFailure(error) {
+        errorHandler.handleError(res, error, requestId, 403);
+    });
+});
+
+router.post('/trustless', function (req, res) {
+    const requestId = uuid.v4();
+    const details = clientsDetailsService.getDetailsFromClient(req.clientIp, req.headers['user-agent']);
+    log.info(requestId + ' Received trustless user authentication request:' + JSON.stringify(req.body));
+    Q.fcall(function validateBody() {
+        return userTrustlessAuthenticationRequestValidator.validate(req.body);
+    }).then(function initiateAuthentication() {
+        return trustlessAuthenticationService.authenticateUser(TrustlessUserAuthenticationRequest(req.headers.referer,
+            req.body.email, requestId, details, req.body.challenge))
+    }).then(function onSuccess(result) {
+        log.info(requestId + ' Authentication was successful, challenge signature: ' + result.challengeSignature);
+        res.status(200).json({
+            primaryAddress : result.primaryAddress,
+            secondaryAddress : result.secondaryAddress,
+            signature : result.challengeSignature
+        });
+    }).fail(function onFailure(error) {
+        errorHandler.handleError(res, error, requestId, 403);
+    });
 });
 
 module.exports = router;
+
