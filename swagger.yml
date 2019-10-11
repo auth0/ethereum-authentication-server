@@ -2,13 +2,14 @@ swagger: '2.0'
 info:
   title: Ethereum Auth0 API
   description: ApT rocks!
-  version: "1.0.0"
+  version: "1.0.1"
 # the domain of the service
 paths:
   /register/user:
     post:
       summary: Registers a new user from the web
-      tags: SYNCHRONOUS
+      tags: 
+        - SYNCHRONOUS
       parameters:
         - name: the request
           in: body
@@ -26,7 +27,8 @@ paths:
   /register/mobile:
     post:
       summary: Registers a new secondary key from the mobile
-      tags: ASYNCHRONOUS
+      tags: 
+        - ASYNCHRONOUS
       parameters:
         - name: the request
           in: body
@@ -44,7 +46,8 @@ paths:
   /signature:
     post:
       summary: Submits a signature of the cryptographic challege
-      tags: SYNCHRONOUS
+      tags: 
+        - SYNCHRONOUS
       parameters:
         - name: the request
           in: body
@@ -62,7 +65,8 @@ paths:
   /authenticate:
     post:
       summary: Authenticates the user from the web
-      tags: SYNCHRONOUS
+      tags: 
+        - SYNCHRONOUS
       parameters:
         - name: the request
           in: body
@@ -80,7 +84,8 @@ paths:
   /initialize:
     get:
       summary: Initializes authentication server by deploying Ethereum's smart contract and creating DB's tables (if do not exist)
-      tags: SYNCHRONOUS
+      tags: 
+        - SYNCHRONOUS
       responses:
         '200':
           description: Smart contract's address, format 0x[Aa-fF0-9]{40}
